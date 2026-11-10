@@ -61,9 +61,13 @@ export default function App() {
   const leaveRoom = useCallback(async () => {
     const active = roomRef.current
     if (supabase && active && userRef.current) {
-      await supabase.rpc('leave_room', { p_room_id: active.id }).catch(() => {})
-      await supabase.removeChannel(channelRef.current).catch(() => {})
-    }
+      try {
+  await supabase.rpc('leave_room', { p_room_id: active.id })
+} catch {}
+
+try {
+  await supabase.removeChannel(channelRef.current)
+} catch {}    }
     channelRef.current = null
     setRoom(null); setParticipants([]); setResults([]); setAudioReady(false)
     if (playerRef.current) { try { playerRef.current.stopVideo(); playerRef.current.destroy() } catch {} playerRef.current = null }
